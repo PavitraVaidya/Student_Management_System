@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}Assignments{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold">Assignments</h2>
+        <p class="text-muted">Manage student assignments</p>
+    </div>
+
+    <a href="{% url 'add_assignment' %}" class="btn btn-primary">
+        Add Assignment
+    </a>
+
+</div>
+
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <form method="GET">
+
+            <div class="row">
+
+                <div class="col-md-9">
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search Student, Subject or Assignment..."
+                        value="{{ request.GET.search }}"
+                    >
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button type="submit" class="btn btn-success w-100">
+                        Search
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Title</th>
+
+                        <th>Student</th>
+
+                        <th>Subject</th>
+
+                        <th>Teacher</th>
+
+                        <th>Due Date</th>
+
+                        <th>Status</th>
+
+                        <th>Marks</th>
+
+                        <th width="180" class="text-center">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for assignment in assignments %}
+
+                    <tr>
+
+                        <td>
+                            {{ assignment.title }}
+                        </td>
+
+                        <td>
+                            {{ assignment.student.first_name }}
+                            {{ assignment.student.last_name }}
+                        </td>
+
+                        <td>
+                            {{ assignment.subject.subject_name }}
+                        </td>
+
+                        <td>
+                            {{ assignment.teacher.first_name }}
+                            {{ assignment.teacher.last_name }}
+                        </td>
+
+                        <td>
+                            {{ assignment.due_date }}
+                        </td>
+
+                        <td>
+
+                            {% if assignment.status == "Submitted" %}
+
+                                <span class="badge bg-success">
+                                    Submitted
+                                </span>
+
+                            {% elif assignment.status == "Late" %}
+
+                                <span class="badge bg-danger">
+                                    Late
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Pending
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if assignment.marks != None %}
+                                {{ assignment.marks }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-center">
+
+                            <a
+                                href="{% url 'assignment_detail' assignment.id %}"
+                                class="btn btn-info btn-sm"
+                            >
+                                View
+                            </a>
+
+                            <a
+                                href="{% url 'edit_assignment' assignment.id %}"
+                                class="btn btn-warning btn-sm"
+                            >
+                                Edit
+                            </a>
+
+                            <a
+                                href="{% url 'delete_assignment' assignment.id %}"
+                                class="btn btn-danger btn-sm"
+                            >
+                                Delete
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="8" class="text-center py-4">
+
+                            No Assignments Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

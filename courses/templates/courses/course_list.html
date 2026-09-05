@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold">Courses</h2>
+        <p class="text-muted">Manage all courses</p>
+    </div>
+
+    <a href="{% url 'add_course' %}" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Add Course
+    </a>
+
+</div>
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <form method="GET">
+
+            <div class="row">
+
+                <div class="col-md-9">
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="search"
+                        placeholder="Search Course..."
+                        value="{{ request.GET.search }}">
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button class="btn btn-success w-100">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Search
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Course Name</th>
+
+                        <th>Course Code</th>
+
+                        <th>Duration</th>
+
+                        <th>Total Semesters</th>
+
+                        <th width="230" class="text-center">
+
+                            Actions
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for course in courses %}
+
+                    <tr>
+
+                        <td>{{ course.course_name }}</td>
+
+                        <td>{{ course.course_code }}</td>
+
+                        <td>{{ course.duration }} Years</td>
+
+                        <td>{{ course.total_semesters }}</td>
+
+                        <td class="text-center">
+
+                            <div class="btn-group" role="group">
+
+                                <a href="{% url 'course_detail' course.id %}"
+                                   class="btn btn-info btn-sm">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </a>
+
+                                <a href="{% url 'edit_course' course.id %}"
+                                   class="btn btn-warning btn-sm">
+
+                                    <i class="fa-solid fa-pen"></i>
+
+                                </a>
+
+                                <a href="{% url 'delete_course' course.id %}"
+                                   class="btn btn-danger btn-sm">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center py-4">
+
+                            No Courses Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

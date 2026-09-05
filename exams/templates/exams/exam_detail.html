@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Exam Details{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+    <div class="card-header bg-primary text-white">
+
+        <h4 class="mb-0">
+            Exam Details
+        </h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered">
+
+            <tr>
+
+                <th width="250">
+                    Exam Name
+                </th>
+
+                <td>
+                    {{ exam.exam_name }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>
+                    Subject
+                </th>
+
+                <td>
+                    {{ exam.subject.subject_name }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>
+                    Exam Date
+                </th>
+
+                <td>
+                    {{ exam.exam_date }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>
+                    Total Marks
+                </th>
+
+                <td>
+                    {{ exam.total_marks }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>
+                    Passing Marks
+                </th>
+
+                <td>
+                    {{ exam.passing_marks }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>
+                    Description
+                </th>
+
+                <td>
+                    {{ exam.description|default:"-" }}
+                </td>
+
+            </tr>
+
+        </table>
+
+
+        <a
+            href="{% url 'edit_exam' exam.id %}"
+            class="btn btn-warning"
+        >
+
+            <i class="bi bi-pencil"></i>
+            Edit
+
+        </a>
+
+
+        <a
+            href="{% url 'exam_list' %}"
+            class="btn btn-secondary"
+        >
+
+            Back
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

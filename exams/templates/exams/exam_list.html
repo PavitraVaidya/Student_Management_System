@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}Exams{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold">Exams</h2>
+        <p class="text-muted">Manage all examinations</p>
+    </div>
+
+    <a href="{% url 'add_exam' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i>
+        Add Exam
+    </a>
+
+</div>
+
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <form method="GET">
+
+            <div class="row">
+
+                <div class="col-md-9">
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search Exam or Subject..."
+                        value="{{ request.GET.search }}"
+                    >
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button type="submit" class="btn btn-success w-100">
+
+                        <i class="bi bi-search"></i>
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Exam Name</th>
+
+                        <th>Subject</th>
+
+                        <th>Exam Date</th>
+
+                        <th>Total Marks</th>
+
+                        <th>Passing Marks</th>
+
+                        <th width="180" class="text-center">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for exam in exams %}
+
+                    <tr>
+
+                        <td>
+                            {{ exam.exam_name }}
+                        </td>
+
+                        <td>
+                            {{ exam.subject.subject_name }}
+                        </td>
+
+                        <td>
+                            {{ exam.exam_date }}
+                        </td>
+
+                        <td>
+                            {{ exam.total_marks }}
+                        </td>
+
+                        <td>
+                            {{ exam.passing_marks }}
+                        </td>
+
+                        <td class="text-center">
+
+                            <a
+                                href="{% url 'exam_detail' exam.id %}"
+                                class="btn btn-info btn-sm"
+                            >
+                                <i class="bi bi-eye"></i>
+                            </a>
+
+                            <a
+                                href="{% url 'edit_exam' exam.id %}"
+                                class="btn btn-warning btn-sm"
+                            >
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                            <a
+                                href="{% url 'delete_exam' exam.id %}"
+                                class="btn btn-danger btn-sm"
+                            >
+                                <i class="bi bi-trash"></i>
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="6" class="text-center py-4">
+
+                            No Exams Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

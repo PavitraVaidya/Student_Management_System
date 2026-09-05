@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}Fees{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold">Fees</h2>
+        <p class="text-muted">Manage student fees</p>
+    </div>
+
+    <a href="{% url 'add_fee' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i>
+        Add Fee
+    </a>
+
+</div>
+
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <form method="GET">
+
+            <div class="row">
+
+                <div class="col-md-9">
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="search"
+                        placeholder="Search by Student or Receipt Number"
+                        value="{{ request.GET.search }}"
+                    >
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button class="btn btn-success w-100">
+                        <i class="bi bi-search"></i>
+                        Search
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="card shadow">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead style="background-color: #212529 !important;">
+
+                    <tr>
+
+                        <th>Receipt No</th>
+
+                        <th>Student</th>
+
+                        <th>Amount</th>
+
+                        <th>Due Date</th>
+
+                        <th>Payment Date</th>
+
+                        <th>Status</th>
+
+                        <th width="180" class="text-center">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for fee in fees %}
+
+                    <tr>
+
+                        <td>
+                            {{ fee.receipt_no }}
+                        </td>
+
+                        <td>
+                            {{ fee.student.first_name }}
+                            {{ fee.student.last_name }}
+                        </td>
+
+                        <td>
+                            ₹{{ fee.amount }}
+                        </td>
+
+                        <td>
+                            {{ fee.due_date }}
+                        </td>
+
+                        <td>
+
+                            {% if fee.payment_date %}
+                                {{ fee.payment_date }}
+                            {% else %}
+                                -
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if fee.status == "Paid" %}
+
+                                <span class="badge bg-success">
+                                    Paid
+                                </span>
+
+                            {% elif fee.status == "Pending" %}
+
+                                <span class="badge bg-danger">
+                                    Pending
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Partial
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-center">
+
+                            <a
+                                href="{% url 'fee_detail' fee.id %}"
+                                class="btn btn-info btn-sm"
+                            >
+                                <i class="bi bi-eye"></i>
+                            </a>
+
+                            <a
+                                href="{% url 'edit_fee' fee.id %}"
+                                class="btn btn-warning btn-sm"
+                            >
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                            <a
+                                href="{% url 'delete_fee' fee.id %}"
+                                class="btn btn-danger btn-sm"
+                            >
+                                <i class="bi bi-trash"></i>
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="7" class="text-center">
+
+                            No Fee Records Found
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

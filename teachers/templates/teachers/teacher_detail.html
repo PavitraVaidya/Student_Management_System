@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+Teacher Details
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h3>Teacher Details</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<tr>
+
+<th width="250">
+
+Teacher ID
+
+</th>
+
+<td>
+
+{{ teacher.teacher_id }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Name
+
+</th>
+
+<td>
+
+{{ teacher.first_name }}
+
+{{ teacher.last_name }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Qualification
+
+</th>
+
+<td>
+
+{{ teacher.qualification }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Experience
+
+</th>
+
+<td>
+
+{{ teacher.experience }} Years
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Phone
+
+</th>
+
+<td>
+
+{{ teacher.phone }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Email
+
+</th>
+
+<td>
+
+{{ teacher.email }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Subject
+
+</th>
+
+<td>
+
+{{ teacher.subject }}
+
+</td>
+
+</tr>
+
+</table>
+
+<a href="{% url 'edit_teacher' teacher.id %}"
+
+class="btn btn-warning">
+
+Edit
+
+</a>
+
+<a href="{% url 'teacher_list' %}"
+
+class="btn btn-secondary">
+
+Back
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
