@@ -4,102 +4,160 @@
 Dashboard
 {% endblock %}
 
+
 {% block content %}
+
+<style>
+
+  
+
+    .dashboard-title {
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .welcome-text {
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+
+
+ 
+
+    .dashboard-card {
+        border: none;
+        border-radius: 14px;
+        color: white;
+        min-height: 150px;
+
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .dashboard-card i {
+        font-size: 34px;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-card h5 {
+        font-size: 16px;
+        margin-top: 8px;
+    }
+
+    .dashboard-card h2 {
+        font-weight: 700;
+        margin-top: 8px;
+    }
+
+
+ 
+
+    .dashboard-table-card {
+        border: none;
+        border-radius: 14px;
+    }
+
+    .dashboard-table-card .card-header {
+        border-bottom: 1px solid #eee;
+        padding: 18px;
+    }
+
+    .table th {
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .student-profile {
+        border: none;
+        border-radius: 14px;
+    }
+
+    .profile-icon {
+        width: 60px;
+        height: 60px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border-radius: 50%;
+
+        background: #e7f1ff;
+        color: #0d6efd;
+
+        font-size: 28px;
+    }
+
+
+  
+
+    .attendance-progress {
+        height: 12px;
+        border-radius: 10px;
+    }
+
+</style>
+
+
+
 
 <div class="d-flex justify-content-between align-items-center mb-4">
 
     <div>
-        <h2 class="fw-bold">Dashboard</h2>
-        <p class="text-muted mb-0">
-            Welcome back, {{ request.user.username }} 👋
+
+        <h2 class="dashboard-title">
+            Dashboard
+        </h2>
+
+        <p class="welcome-text">
+
+            Welcome back,
+            {{ request.user.username }} 👋
+
         </p>
+
     </div>
 
-    <div>
-        <a href="{% url 'add_student' %}" class="btn btn-primary">
+
+    <!-- ADMIN ONLY -->
+
+    {% if request.user.role == "ADMIN" %}
+
+        <a
+            href="{% url 'add_student' %}"
+            class="btn btn-primary"
+        >
+
             <i class="bi bi-person-plus-fill"></i>
+
             Add Student
+
         </a>
-    </div>
+
+    {% endif %}
 
 </div>
 
-<!-- Dashboard Cards -->
- <div class="row g-4">
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h6 class="text-muted">Total Students</h6>
-                <h2 class="fw-bold">{{ total_students }}</h2>
-                <i class="bi bi-people-fill fs-2"></i>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h6 class="text-muted">Total Teachers</h6>
-                <h2 class="fw-bold">{{ total_teachers }}</h2>
-                <i class="bi bi-person-workspace fs-2"></i>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h6 class="text-muted">Total Courses</h6>
-                <h2 class="fw-bold">{{ total_courses }}</h2>
-                <i class="bi bi-book-fill fs-2"></i>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h6 class="text-muted">Total Subjects</h6>
-                <h2 class="fw-bold">{{ total_subjects }}</h2>
-                <i class="bi bi-journal-text fs-2"></i>
-            </div>
-        </div>
-    </div>
+{% if request.user.role == "ADMIN" %}
 
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h6 class="text-muted">Attendance Records</h6>
-                <h2 class="fw-bold">{{ total_attendance }}</h2>
-                <i class="bi bi-calendar-check-fill fs-2"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h6 class="text-muted">Pending Fees</h6>
-                <h2 class="fw-bold">{{ pending_fees }}</h2>
-                <i class="bi bi-cash-stack fs-2"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <h6 class="text-muted">Total Exams</h6>
-                <h2 class="fw-bold">{{ total_exams }}</h2>
-                <i class="bi bi-pencil-square fs-2"></i>
-            </div>
-        </div>
-    </div>
-
-</div>
 
 <div class="row g-4">
+
+
+    <!-- STUDENTS -->
 
     <div class="col-lg-3 col-md-6">
 
@@ -111,13 +169,18 @@ Dashboard
 
                 <h5>Total Students</h5>
 
-                <h2>{{ student_count }}</h2>
+                <h2>
+                    {{ total_students }}
+                </h2>
 
             </div>
 
         </div>
 
     </div>
+
+
+    <!-- TEACHERS -->
 
     <div class="col-lg-3 col-md-6">
 
@@ -129,13 +192,18 @@ Dashboard
 
                 <h5>Total Teachers</h5>
 
-                <h2>{{ teacher_count }}</h2>
+                <h2>
+                    {{ total_teachers }}
+                </h2>
 
             </div>
 
         </div>
 
     </div>
+
+
+    <!-- COURSES -->
 
     <div class="col-lg-3 col-md-6">
 
@@ -147,13 +215,18 @@ Dashboard
 
                 <h5>Total Courses</h5>
 
-                <h2>{{ course_count }}</h2>
+                <h2>
+                    {{ total_courses }}
+                </h2>
 
             </div>
 
         </div>
 
     </div>
+
+
+    <!-- SUBJECTS -->
 
     <div class="col-lg-3 col-md-6">
 
@@ -161,11 +234,13 @@ Dashboard
 
             <div class="card-body text-center">
 
-                <i class="bi bi-file-earmark-text-fill"></i>
+                <i class="bi bi-journal-text"></i>
 
                 <h5>Total Subjects</h5>
 
-                <h2>{{ subject_count }}</h2>
+                <h2>
+                    {{ total_subjects }}
+                </h2>
 
             </div>
 
@@ -175,82 +250,1011 @@ Dashboard
 
 </div>
 
-<!-- Recent Students -->
 
-<div class="card shadow mt-5">
 
-    <div class="card-header bg-white">
+<!-- ADMIN SECOND ROW -->
 
-        <h5 class="mb-0">
-            <i class="bi bi-clock-history"></i>
-            Recent Students
-        </h5>
+<div class="row g-4 mt-1">
+
+
+    <!-- ATTENDANCE -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card dashboard-card bg-info">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-calendar-check-fill"></i>
+
+                <h5>Attendance Records</h5>
+
+                <h2>
+                    {{ total_attendance }}
+                </h2>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="card-body">
 
-        <table class="table table-hover align-middle">
+    <!-- FEES -->
 
-            <thead>
+    <div class="col-lg-3 col-md-6">
 
-                <tr>
+        <div class="card dashboard-card bg-secondary">
 
-                    <th>Admission No</th>
+            <div class="card-body text-center">
 
-                    <th>Name</th>
+                <i class="bi bi-cash-stack"></i>
 
-                    <th>Course</th>
+                <h5>Pending Fees</h5>
 
-                    <th>Phone</th>
+                <h2>
+                    {{ pending_fees }}
+                </h2>
 
-                </tr>
+            </div>
 
-            </thead>
+        </div>
 
-            <tbody>
+    </div>
 
-{% for student in recent_students %}
 
-<tr>
+    <!-- EXAMS -->
 
-    <td>
-        {{ student.admission_no }}
-    </td>
+    <div class="col-lg-3 col-md-6">
 
-    <td>
-        {{ student.first_name }}
-        {{ student.last_name }}
-    </td>
+        <div class="card dashboard-card bg-dark">
 
-    <td>
-        {{ student.course.course_name }}
-    </td>
+            <div class="card-body text-center">
 
-    <td>
-        {{ student.phone }}
-    </td>
+                <i class="bi bi-pencil-square"></i>
 
-</tr>
+                <h5>Total Exams</h5>
 
-{% empty %}
+                <h2>
+                    {{ total_exams }}
+                </h2>
 
-<tr>
+            </div>
 
-    <td colspan="4" class="text-center">
-        No students available.
-    </td>
+        </div>
 
-</tr>
+    </div>
 
-{% endfor %}
 
-</tbody>
+    <!-- RESULTS -->
 
-        </table>
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card dashboard-card bg-success">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-bar-chart-fill"></i>
+
+                <h5>Total Results</h5>
+
+                <h2>
+                    {{ total_results }}
+                </h2>
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
+
+
+
+<!-- ADMIN RECENT STUDENTS -->
+
+<div class="card shadow-sm mt-5 dashboard-table-card">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-clock-history"></i>
+
+            Recent Students
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Admission No</th>
+
+                        <th>Name</th>
+
+                        <th>Course</th>
+
+                        <th>Phone</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for student in recent_students %}
+
+                    <tr>
+
+                        <td>
+                            {{ student.admission_no }}
+                        </td>
+
+                        <td>
+
+                            {{ student.first_name }}
+                            {{ student.last_name }}
+
+                        </td>
+
+                        <td>
+                            {{ student.course.course_name }}
+                        </td>
+
+                        <td>
+                            {{ student.phone }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            class="text-center text-muted"
+                        >
+
+                            No students available.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+{% elif request.user.role == "TEACHER" %}
+
+
+<!-- TEACHER INFORMATION -->
+
+{% if teacher %}
+
+<div class="card shadow-sm student-profile mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex align-items-center">
+
+            <div class="profile-icon me-3">
+
+                <i class="bi bi-person-workspace"></i>
+
+            </div>
+
+
+            <div>
+
+                <h5 class="mb-1">
+
+                    {{ teacher.first_name }}
+                    {{ teacher.last_name }}
+
+                </h5>
+
+                <p class="text-muted mb-0">
+
+                    Teacher ID:
+                    {{ teacher.teacher_id }}
+
+                </p>
+
+                {% if teacher.subject %}
+
+                <p class="text-muted mb-0">
+
+                    Subject:
+                    {{ teacher.subject.subject_name }}
+
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+
+<!-- TEACHER CARDS -->
+
+<div class="row g-4">
+
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card dashboard-card bg-primary">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-people-fill"></i>
+
+                <h5>Total Students</h5>
+
+                <h2>
+                    {{ total_students }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card dashboard-card bg-success">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-book-fill"></i>
+
+                <h5>Total Courses</h5>
+
+                <h2>
+                    {{ total_courses }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card dashboard-card bg-warning text-dark">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-journal-text"></i>
+
+                <h5>Total Subjects</h5>
+
+                <h2>
+                    {{ total_subjects }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card dashboard-card bg-info">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-calendar-check-fill"></i>
+
+                <h5>Attendance Records</h5>
+
+                <h2>
+                    {{ total_attendance }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card dashboard-card bg-dark">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-pencil-square"></i>
+
+                <h5>Total Exams</h5>
+
+                <h2>
+                    {{ total_exams }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card dashboard-card bg-danger">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+                <h5>Assignments</h5>
+
+                <h2>
+                    {{ total_assignments }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- TEACHER RECENT STUDENTS -->
+
+<div class="card shadow-sm mt-5 dashboard-table-card">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-people-fill"></i>
+
+            Recent Students
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Admission No</th>
+
+                        <th>Name</th>
+
+                        <th>Course</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for student in recent_students %}
+
+                    <tr>
+
+                        <td>
+                            {{ student.admission_no }}
+                        </td>
+
+                        <td>
+
+                            {{ student.first_name }}
+                            {{ student.last_name }}
+
+                        </td>
+
+                        <td>
+                            {{ student.course.course_name }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'student_detail' student.id %}"
+                                class="btn btn-sm btn-outline-primary"
+                            >
+                                View
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            class="text-center text-muted"
+                        >
+                            No students available.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+{% elif request.user.role == "STUDENT" %}
+
+
+{% if student %}
+
+
+<!-- STUDENT PROFILE -->
+
+<div class="card shadow-sm student-profile mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex align-items-center">
+
+            <div class="profile-icon me-3">
+
+                <i class="bi bi-person-fill"></i>
+
+            </div>
+
+
+            <div>
+
+                <h5 class="mb-1">
+
+                    {{ student.first_name }}
+                    {{ student.last_name }}
+
+                </h5>
+
+
+                <p class="text-muted mb-0">
+
+                    Admission No:
+                    {{ student.admission_no }}
+
+                </p>
+
+
+                <p class="text-muted mb-0">
+
+                    Course:
+                    {{ student.course.course_name }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- STUDENT CARDS -->
+
+<div class="row g-4">
+
+
+    <!-- ATTENDANCE -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card dashboard-card bg-primary">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-calendar-check-fill"></i>
+
+                <h5>My Attendance</h5>
+
+                <h2>
+                    {{ attendance_percentage }}%
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PENDING FEES -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card dashboard-card bg-danger">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-cash-stack"></i>
+
+                <h5>Pending Fees</h5>
+
+                <h2>
+                    {{ pending_fees }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ASSIGNMENTS -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card dashboard-card bg-warning text-dark">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+                <h5>Assignments</h5>
+
+                <h2>
+                    {{ total_assignments }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULTS -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card dashboard-card bg-success">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-bar-chart-fill"></i>
+
+                <h5>Results</h5>
+
+                <h2>
+                    {{ total_results }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ATTENDANCE DETAILS -->
+
+<div class="card shadow-sm dashboard-table-card mt-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between">
+
+            <h5>
+
+                <i class="bi bi-calendar-check"></i>
+
+                Attendance Summary
+
+            </h5>
+
+            <strong>
+
+                {{ attendance_percentage }}%
+
+            </strong>
+
+        </div>
+
+
+        <div class="progress attendance-progress mt-3">
+
+            <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: {{ attendance_percentage }}%;"
+            >
+            </div>
+
+        </div>
+
+
+        <div class="row text-center mt-4">
+
+
+            <div class="col">
+
+                <strong class="text-success">
+
+                    {{ present_count }}
+
+                </strong>
+
+                <br>
+
+                <small class="text-muted">
+                    Present
+                </small>
+
+            </div>
+
+
+            <div class="col">
+
+                <strong class="text-danger">
+
+                    {{ absent_count }}
+
+                </strong>
+
+                <br>
+
+                <small class="text-muted">
+                    Absent
+                </small>
+
+            </div>
+
+
+            <div class="col">
+
+                <strong class="text-warning">
+
+                    {{ late_count }}
+
+                </strong>
+
+                <br>
+
+                <small class="text-muted">
+                    Late
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- UPCOMING EXAMS -->
+
+<div class="card shadow-sm mt-4 dashboard-table-card">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-calendar-event"></i>
+
+            Upcoming Exams
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Exam</th>
+
+                        <th>Subject</th>
+
+                        <th>Date</th>
+
+                        <th>Total Marks</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for exam in upcoming_exams %}
+
+                    <tr>
+
+                        <td>
+                            {{ exam.exam_name }}
+                        </td>
+
+                        <td>
+                            {{ exam.subject.subject_name }}
+                        </td>
+
+                        <td>
+                            {{ exam.exam_date }}
+                        </td>
+
+                        <td>
+                            {{ exam.total_marks }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            class="text-center text-muted"
+                        >
+
+                            No exams available.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- RECENT RESULTS -->
+
+<div class="card shadow-sm mt-4 dashboard-table-card">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-bar-chart-fill"></i>
+
+            Recent Results
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Exam</th>
+
+                        <th>Subject</th>
+
+                        <th>Marks</th>
+
+                        <th>Grade</th>
+
+                        <th>Result</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for result in recent_results %}
+
+                    <tr>
+
+                        <td>
+                            {{ result.exam.exam_name }}
+                        </td>
+
+                        <td>
+                            {{ result.exam.subject.subject_name }}
+                        </td>
+
+                        <td>
+
+                            {{ result.marks }}
+                            /
+                            {{ result.exam.total_marks }}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ result.grade }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {% if result.result == "Pass" %}
+
+                                <span class="badge bg-success">
+                                    Pass
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+                                    Fail
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="text-center text-muted"
+                        >
+
+                            No results available.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{% else %}
+
+
+<!-- STUDENT ACCOUNT NOT LINKED -->
+
+<div class="alert alert-warning">
+
+    <h5>
+
+        <i class="bi bi-exclamation-triangle-fill"></i>
+
+        Student profile not connected
+
+    </h5>
+
+    <p class="mb-0">
+
+        Your login account is not currently linked to a
+        student profile. Please contact the administrator.
+
+    </p>
+
+</div>
+
+
+{% endif %}
+
+
+
+
+
+{% else %}
+
+<div class="alert alert-danger">
+
+    Your account does not have a valid role.
+
+</div>
+
+{% endif %}
+
 
 {% endblock %}

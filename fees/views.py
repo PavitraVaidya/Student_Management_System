@@ -1,36 +1,92 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 from .models import Fee
 from .forms import FeeForm
+from students.models import Student
 
 
+@login_required
 def fee_list(request):
 
-    fees = Fee.objects.select_related(
-        "student"
-    ).all().order_by("-id")
+    user = request.user
 
-    search = request.GET.get("search")
+    if user.role == "ADMIN":
 
-    if search:
-        fees = fees.filter(
-            Q(student__first_name__icontains=search) |
-            Q(student__last_name__icontains=search) |
-            Q(receipt_no__icontains=search)
+        fees = (
+            Fee.objects
+            .select_related("student")
+            .all()
+            .order_by("-id")
         )
+
+        search = request.GET.get("search", "").strip()
+
+        if search:
+
+            fees = fees.filter(
+                Q(student__first_name__icontains=search)
+                |
+                Q(student__last_name__icontains=search)
+                |
+                Q(receipt_no__icontains=search)
+            )
+
+    elif user.role == "STUDENT":
+
+        try:
+            student = Student.objects.get(user=user)
+
+        except Student.DoesNotExist:
+
+            messages.error(
+                request,
+                "Your account is not linked to a student profile."
+            )
+
+            return redirect("dashboard")
+
+        fees = (
+            Fee.objects
+            .select_related("student")
+            .filter(student=student)
+            .order_by("-id")
+        )
+
+        search = ""
+
+    else:
+
+        messages.error(
+            request,
+            "You do not have permission to access fee information."
+        )
+
+        return redirect("dashboard")
 
     return render(
         request,
         "fees/fee_list.html",
         {
-            "fees": fees
+            "fees": fees,
+            "search": search
         }
     )
 
 
+@login_required
 def add_fee(request):
+
+    if request.user.role != "ADMIN":
+
+        messages.error(
+            request,
+            "Only administrators can add fee records."
+        )
+
+        return redirect("dashboard")
 
     if request.method == "POST":
 
@@ -42,7 +98,7 @@ def add_fee(request):
 
             messages.success(
                 request,
-                "Fee Added Successfully."
+                "Fee added successfully."
             )
 
             return redirect("fee_list")
@@ -60,7 +116,17 @@ def add_fee(request):
     )
 
 
+@login_required
 def edit_fee(request, pk):
+
+    if request.user.role != "ADMIN":
+
+        messages.error(
+            request,
+            "Only administrators can edit fee records."
+        )
+
+        return redirect("dashboard")
 
     fee = get_object_or_404(
         Fee,
@@ -80,16 +146,14 @@ def edit_fee(request, pk):
 
             messages.success(
                 request,
-                "Fee Updated Successfully."
+                "Fee updated successfully."
             )
 
             return redirect("fee_list")
 
     else:
 
-        form = FeeForm(
-            instance=fee
-        )
+        form = FeeForm(instance=fee)
 
     return render(
         request,
@@ -101,29 +165,83 @@ def edit_fee(request, pk):
     )
 
 
+@login_required
 def delete_fee(request, pk):
 
+    if request.user.role != "ADMIN":
+
+        messages.error(
+            request,
+            "Only administrators can delete fee records."
+        )
+
+        return redirect("dashboard")
+
     fee = get_object_or_404(
-        Fee,
+        Fee.objects.select_related("student"),
         pk=pk
     )
 
-    fee.delete()
+    if request.method == "POST":
 
-    messages.success(
+        fee.delete()
+
+        messages.success(
+            request,
+            "Fee deleted successfully."
+        )
+
+        return redirect("fee_list")
+
+    return render(
         request,
-        "Fee Deleted Successfully."
+        "fees/fee_confirm_delete.html",
+        {
+            "fee": fee
+        }
     )
 
-    return redirect("fee_list")
 
-
+@login_required
 def fee_detail(request, pk):
 
-    fee = get_object_or_404(
-        Fee,
-        pk=pk
-    )
+    user = request.user
+
+    if user.role == "ADMIN":
+
+        fee = get_object_or_404(
+            Fee.objects.select_related("student"),
+            pk=pk
+        )
+
+    elif user.role == "STUDENT":
+
+        try:
+            student = Student.objects.get(user=user)
+
+        except Student.DoesNotExist:
+
+            messages.error(
+                request,
+                "Your account is not linked to a student profile."
+            )
+
+            return redirect("dashboard")
+
+        fee = get_object_or_404(
+            Fee.objects.select_related("student"),
+            pk=pk,
+            student=student
+        )
+
+    else:
+
+        messages.error(
+            request,
+            "You do not have permission to view fee information."
+        )
+
+        return redirect("dashboard")
 
     return render(
         request,
